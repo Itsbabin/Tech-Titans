@@ -1,46 +1,94 @@
 const express = require('express');
 const User = require('../modules/User');
 const route = express.Router();
-const {check, validationResult} = require('express-validator');
+const { check, validationResult } = require('express-validator');
+const bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
 
-route.post('/user', [
+const secreat = "thisIsSecreat"
+
+route.post('/singin', [
     // Validate the field
     check('password')
-      .isString()
-      .isLength({ min: 8 })
-      .matches(/[a-zA-Z]/)
-      .matches(/\d/)
-      .matches(/[!@#$%^&*()_+[\]{};':"\\|,.<>?]/)
-      .withMessage('Password must be at least 8 characters long and contain at least one alphabet character, one numeric character, and one special character'),
+        .isString()
+        .isLength({ min: 8 })
+        .matches(/[a-zA-Z]/)
+        .matches(/\d/)
+        .matches(/[!@#$%^&*()_+[\]{};':"\\|,.<>?]/)
+        .withMessage('Password must be at least 8 characters long and contain at least one alphabet character, one numeric character, and one special character'),
 
     check('name')
-      .isString()
-      .isLength({ min: 8 })
-      .withMessage('Name must be at least 3 characters long'),
+        .isString()
+        .isLength({ min: 8 })
+        .withMessage('Name must be at least 3 characters long'),
 
     check('email')
-      .isEmail()
-      .withMessage('enter a valid email'),
+        .isEmail()
+        .withMessage('enter a valid email'),
 
-  ], (req, res) => {
+], async (req, res) => {
     // Check for validation errors
     const errors = validationResult(req);
-    
+
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    User.create({
+    const salt = await bcrypt.genSalt(10);
+
+    const passwordHash = await bcrypt.hash(req.body.password, salt);
+
+    await User.create({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
-      })
+        password: passwordHash,
+    })
         .then((user) => {
-            res.status(200).json({saved: user});
+            const userData = user.date
+            const token = jwt.sign(userData, secreat)
+            res.status(200).json({ token });
         })
         .catch((err) => {
-          res.status(400).json({error: "this email is already register"});
+            res.status(400).json({ error: `this email is already register ${err}` });
         })
-    })
+})
+
+
+route.post('/login', [
+    // Validate the field
+    check('password')
+        .isString()
+        .isLength({ min: 1 }),
+
+    check('email')
+        .isEmail()
+        .withMessage('enter a valid email'),
+
+], async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
   
+        const { email, password } = req.body;
+
+        const emailUser =await User.findOne({ email });
+        if (!emailUser) {
+          return  res.status(400).json({ error: "use a right creadential" });
+        }
+        await bcrypt.compare(password, emailUser.password , (err, result) => {
+            if (err) {
+              return res.status(500).json({ error: 'Password comparison error' });
+            }
+        
+            if (result) {
+              res.status(200).json({ message: 'Login successful' });
+            } else {
+              res.status(401).json({ error: 'Incorrect password' });
+            }
+          });
+    
+    })
+
 module.exports = route;

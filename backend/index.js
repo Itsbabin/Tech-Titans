@@ -11,7 +11,7 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
-app.use('/api/auth',require('./routes/userconnect'));
+app.use('/api/user',require('./routes/userconnect'));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
