@@ -4,7 +4,7 @@ const route = express.Router();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
-
+const fetchuser = require('../middleware/fetchuser')
 const secreat = "thisIsSecreat"
 
 route.post('/singin', [
@@ -41,10 +41,11 @@ route.post('/singin', [
     await User.create({
         name: req.body.name,
         email: req.body.email,
+        usertype: req.body.usertype,
         password: passwordHash,
     })
         .then((user) => {
-            const userData = user.date
+            const userData = user.email
             const token = jwt.sign(userData, secreat)
             res.status(200).json({ token });
         })
@@ -70,25 +71,40 @@ route.post('/login', [
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-  
-        const { email, password } = req.body;
 
-        const emailUser =await User.findOne({ email });
-        if (!emailUser) {
-          return  res.status(400).json({ error: "use a right creadential" });
+    const { email, password } = req.body;
+
+    const emailUser = await User.findOne({ email });
+    if (!emailUser) {
+        return res.status(400).json({ error: "use a right creadential" });
+    }
+    await bcrypt.compare(password, emailUser.password, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: 'Password comparison error' });
         }
-        await bcrypt.compare(password, emailUser.password , (err, result) => {
-            if (err) {
-              return res.status(500).json({ error: 'Password comparison error' });
-            }
-        
-            if (result) {
-              res.status(200).json({ message: 'Login successful' });
-            } else {
-              res.status(401).json({ error: 'Incorrect password' });
-            }
-          });
-    
-    })
+
+        if (result) {
+            const userData = emailUser.email
+            const token = jwt.sign(userData, secreat)
+            res.status(200).json({ token });
+        } else {
+            res.status(401).json({ error: 'Incorrect password' });
+        }
+    });
+
+})
+
+route.post('/getuser', fetchuser, async (req, res) => {
+
+    try {
+        const useremail = req.email;
+        const user = await User.findOne({ useremail });
+        res.status(200).json({ theUser: user });
+    } catch (error) {
+        res.status(400).json({ errors: "some error occored" });
+    }
+
+
+})
 
 module.exports = route;

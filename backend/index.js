@@ -12,6 +12,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 app.use('/api/user',require('./routes/userconnect'));
+app.use('/api/data',require('./routes/userdata'));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
