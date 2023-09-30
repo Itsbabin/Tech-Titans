@@ -3,12 +3,13 @@ const { Schema } = mongoose;
 
 const DataUser1Schema = new Schema({
   name: {
-    type : mongoose.Schema.Types.String,
-    ref : 'User',
+    type : String,
+    required :true,
   },
   email: {
     type : mongoose.Schema.Types.String,
     ref : 'User',
+    required : true,
   },
   lawyer : {
     type : String,
@@ -24,13 +25,12 @@ const DataUser1Schema = new Schema({
   },
   court: {
     type : String,
-    required : true,
   },
   section: {
     type : String,
   },
   hearing: {
-    type : String,
+    type : [String],
   },
   description : {
     type : String,

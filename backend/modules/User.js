@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const { Schema } = mongoose;
-
+    // this is a module of client and lawyer //
+      // to creat a account they should fill this field //
 const UserSchema = new Schema({
   name: {
     type : String,
@@ -18,6 +19,13 @@ const UserSchema = new Schema({
   usertype: {
     type : Number,
     required : true,
+  },
+  verified: {
+    type : Boolean,
+    default : false,
+  },
+  block: {
+    type : [String],
   },
   date : {
     type : Date,

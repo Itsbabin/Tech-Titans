@@ -6,19 +6,22 @@ const User = require('../modules/User');
 const LawyerData = require('../modules/LawyerData');
 const { check, validationResult } = require('express-validator');
 
-
+// to show clients their requested case
 route.get('/getuserdata/client',fetchuser, async (req ,res) => {
     try {       
-        const datas = await DataUser1.find({email: req.email})
+        const datas = await DataUser1.find({email: req.user})
         res.status(200).json(datas);
      }
      catch (error) {
         res.status(400).json({ error: `some error occored ${err}`});
     }
 })
+
+// to show lawyers thier cases
 route.get('/getuserdata/lawyer',fetchuser, async (req ,res) => {
     try {       
-        const datas = await DataUser1.find({lawyer: req.email})
+
+        const datas = await DataUser1.find({lawyer: req.user})
         res.status(200).json(datas);
      }
      catch (error) {
@@ -26,7 +29,7 @@ route.get('/getuserdata/lawyer',fetchuser, async (req ,res) => {
     }
 })
 
-
+// this rpout is use to creat a case file datas
 route.post('/creatuserdata',fetchuser, [
     // Validate the field
     check('type')
@@ -45,23 +48,9 @@ route.post('/creatuserdata',fetchuser, [
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const name =  User.find({email : req.user});
-
-    const isClient = await  DataUser1.find({lawyer : req.body.lawyer});
-        let count = isClient.find(item => item.email === req.user);
-    
-    if(!count){
-        await LawyerData.create({
-            client: req.user,
-            lawyer: req.body.lawyer,
-            status: true,
-        })
-            .catch((err) => {
-                res.status(400).json({ error: `some error occored ${err}`});
-            })
-    }
+    const name = await User.find({email : req.user});
     await DataUser1.create({
-        name: name.name,
+        name: name[0].name,
         email: req.user,
         type: req.body.type,
         lawyer: req.body.lawyer,
@@ -72,7 +61,7 @@ route.post('/creatuserdata',fetchuser, [
         hearing: "todo",
     })
         .then((dataOfuser1) => {
-            res.status(200).json({ dataOfuser1 });
+            res.status(200).json({ data : dataOfuser1});
         })
         .catch((err) => {
             res.status(400).json({ error: `some error occored ${err}`});

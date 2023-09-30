@@ -19,7 +19,7 @@ route.post('/singin', [
 
     check('name')
         .isString()
-        .isLength({ min: 8 })
+        .isLength({ min: 3 })
         .withMessage('Name must be at least 3 characters long'),
 
     check('email')
@@ -59,7 +59,7 @@ route.post('/login', [
     // Validate the field
     check('password')
         .isString()
-        .isLength({ min: 1 }),
+        .isLength({ min: 8 }),
 
     check('email')
         .isEmail()
@@ -80,7 +80,7 @@ route.post('/login', [
     }
     await bcrypt.compare(password, emailUser.password, (err, result) => {
         if (err) {
-            return res.status(500).json({ error: 'Password comparison error' });
+            return res.status(500).json({ error: 'Incorrect password' });
         }
 
         if (result) {
@@ -94,7 +94,7 @@ route.post('/login', [
 
 })
 
-route.post('/getuser', fetchuser, async (req, res) => {
+route.post('/', fetchuser, async (req, res) => {
 
     try {
         const useremail = req.email;
