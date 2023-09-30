@@ -1,8 +1,16 @@
-
+import Navbar from "./components/Navbar"
+import { Routes, Route } from 'react-router-dom';
+import Singin from "./components/Singin";
+import Home from "./components/Home";
 function App() {
   return (
     <>
-      <div>Hello Taitans</div>
+          <Navbar/>
+      <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/singin" element={<Singin/>} />
+       </Routes>
+   
     </>
   )
 }
