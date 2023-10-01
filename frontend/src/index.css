@@ -6,7 +6,7 @@
 }
 
 .navbar{
-    background-color:darkblue ;
+    background-color:rgb(13, 13, 83) ;
     height: 3rem;
     display: flex;
     align-items: center;
@@ -19,4 +19,12 @@
     color: aliceblue;
     text-decoration: none;
     font-size: large;
+}
+.home{
+    height: 90vh;
+    background-color: #419197;
+    font-size: 10rem;
+    text-shadow: 1rem 1rem rgba(79, 79, 79, 0.495);
+    text-align: center;
+    padding-top: 10%;
 }

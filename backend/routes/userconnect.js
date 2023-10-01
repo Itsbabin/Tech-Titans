@@ -1,5 +1,6 @@
 const express = require('express');
 const User = require('../modules/User');
+const DataUser1 = require('../modules/DataUser1');
 const route = express.Router();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
@@ -78,15 +79,15 @@ route.post('/login', [
     if (!emailUser) {
         return res.status(400).json({ error: "use a right creadential" });
     }
-    await bcrypt.compare(password, emailUser.password, (err, result) => {
+    await bcrypt.compare(password, emailUser.password, async (err, result) => {
         if (err) {
             return res.status(500).json({ error: 'Incorrect password' });
         }
 
         if (result) {
-            const userData = emailUser.email
-            const token = jwt.sign(userData, secreat)
-            res.status(200).json({ token });
+            const datas = await DataUser1.find({ email : email })
+            res.status(200).json(datas);
+            console.log(datas)
         } else {
             res.status(401).json({ error: 'Incorrect password' });
         }
