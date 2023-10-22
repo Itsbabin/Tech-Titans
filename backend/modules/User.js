@@ -17,7 +17,7 @@ const UserSchema = new Schema({
     required : true,
   },
   usertype: {
-    type : Number,
+    type : String,
     required : true,
   },
   verified: {

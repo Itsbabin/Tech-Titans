@@ -1,6 +1,5 @@
 const express = require('express');
 const User = require('../modules/User');
-const DataUser1 = require('../modules/DataUser1');
 const route = express.Router();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
@@ -85,9 +84,8 @@ route.post('/login', [
         }
 
         if (result) {
-            const datas = await DataUser1.find({ email : email })
-            res.status(200).json(datas);
-            console.log(datas)
+            const token = jwt.sign(email, secreat)
+            res.status(200).json({ token });
         } else {
             res.status(401).json({ error: 'Incorrect password' });
         }

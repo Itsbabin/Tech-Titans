@@ -1,47 +1,59 @@
 import React, { useState } from 'react'
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
 
 export default function Singin() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    
-    
-    const getdata = async ()=>{
-          console.log(password)
-    await axios({
-            method: 'post',
-            url: 'http://localhost:3000/api/user/login',
-            data: {
-                email: 'abcd@gmail.com',
-                password: 'Babin@2004'
-              },
-          })
-            .then(function (response) {
-              console.log(response.data);
+    const [credential, setCredential] = useState({name : "",usertype : "",email : "",password: ""});
+    const onchange = (e)=>{
+        setCredential({...credential,[e.target.name]: e.target.value})
+      }
+      const submit = async (e)=>{
+        e.preventDefault();
+      await axios({
+              method: 'post',
+              url: 'http://localhost:3000/api/user/singin',
+              data: {
+                  email: credential.email,
+                  password: credential.password,
+                  usertype: credential.usertype,
+                  name: credential.name
+                },
             })
-            .catch((err)=>{
-                console.log(err);
-            })
-    }
+              .then(function (response) {
+                console.log(response.data);
+                navigateTo('/')
+              })
+              .catch((err)=>{
+                  console.log(err);
+              })
+      }
   return (
-    <>
     <div className="container">
-        <h2>Login</h2>
-        <form action="process_signin.php" method="post">
-            <div className="form-group">
-                <label htmlFor="username">Email</label>
-                <input type="email" id="username" name="username" required/>
-            </div>
-            <div className="form-group">
-                <label htmlFor="password">Password:</label>
-                <input type="password" id="password" value={password} name="password" onChange={(e)=>{setPassword(e)}} required/>
-            </div>
-            <div className="form-group">
-                <input type="submit" value="Login" onClick={getdata}/>
-            </div>
-        </form>
-    </div>
-    </>
+    <h2>Singin</h2>
+    <form onSubmit={submit}>
+        <div className="form-group">
+            <label htmlFor="name">Name</label>
+            <input type="text" id="name" name="name"   onChange={onchange} required/>
+        </div>
+        <div className="form-group">
+            <label htmlFor="usertype">User type</label>
+            <input type="radio" id="Lawyer" name="usertype" value="1" onChange={onchange}/>
+             <label htmlFor="Lawyer">Lawyer</label><br/>
+            <input type="radio" id="Client" name="usertype" value="0" onChange={onchange}/>
+             <label htmlFor="Client">Client</label><br/>
+        </div>
+        <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input type="email" id="email" name="email"  onChange={onchange} required/>
+        </div>
+        <div className="form-group">
+            <label htmlFor="password">Password:</label>
+            <input type="password" id="password" name="password"  onChange={onchange} required/>
+        </div>
+        <div className="form-group">
+            <input type="submit" value="Login"/>
+        </div>
+    </form>
+</div>
   )
 }
