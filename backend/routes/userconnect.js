@@ -11,7 +11,7 @@ route.post('/singin', [
     // Validate the field
     check('password')
         .isString()
-        .isLength({ min: 8 })
+        .isLength({ min: 5 })
         .matches(/[a-zA-Z]/)
         .matches(/\d/)
         .matches(/[!@#$%^&*()_+[\]{};':"\\|,.<>?]/)
@@ -50,7 +50,7 @@ route.post('/singin', [
             res.status(200).json({ token });
         })
         .catch((err) => {
-            res.status(400).json({ error: `this email is already register ${err}` });
+            res.status(400).json({ error: `this email is already register` });
         })
 })
 

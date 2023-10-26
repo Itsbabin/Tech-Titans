@@ -22,11 +22,12 @@ export default function Login() {
               },
           })
             .then(function (response) {
-              console.log(response.data);
+              localStorage.setItem('token',response.data.token)
+              alert("login success fully")
               navigateTo('/')
             })
             .catch((err)=>{
-                console.log(err);
+                console.log(err.response.data);
             })
     }
   return (

@@ -20,12 +20,12 @@ export default function Singin() {
                 },
             })
               .then(function (response) {
-                console.log(response.data);
+                localStorage.setItem('token',response.data.token)
                 navigateTo('/')
               })
               .catch((err)=>{
-                  console.log(err);
-              })
+                console.log(err.response.data);
+            })
       }
   return (
     <div className="container">
@@ -33,7 +33,7 @@ export default function Singin() {
     <form onSubmit={submit}>
         <div className="form-group">
             <label htmlFor="name">Name</label>
-            <input type="text" id="name" name="name"   onChange={onchange} required/>
+            <input type="text" id="name" name="name" minLength={3}  onChange={onchange} required/>
         </div>
         <div className="form-group">
             <label htmlFor="usertype">User type</label>
@@ -48,7 +48,7 @@ export default function Singin() {
         </div>
         <div className="form-group">
             <label htmlFor="password">Password:</label>
-            <input type="password" id="password" name="password"  onChange={onchange} required/>
+            <input type="password" id="password" name="password" minLength={5}  onChange={onchange} required/>
         </div>
         <div className="form-group">
             <input type="submit" value="Login"/>

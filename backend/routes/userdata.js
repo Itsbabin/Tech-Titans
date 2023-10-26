@@ -3,7 +3,6 @@ const fetchuser = require('../middleware/fetchuser');
 const route = express.Router();
 const DataUser1 = require('../modules/DataUser1');
 const User = require('../modules/User');
-const LawyerData = require('../modules/LawyerData');
 const { check, validationResult } = require('express-validator');
 
 // to show clients their requested case
