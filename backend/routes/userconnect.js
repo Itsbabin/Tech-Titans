@@ -98,7 +98,7 @@ route.post('/', fetchuser, async (req, res) => {
     try {
         const useremail = req.email;
         const user = await User.findOne({ useremail });
-        res.status(200).json({ theUser: user });
+        res.status(200).json({ user });
     } catch (error) {
         res.status(400).json({ errors: "some error occored" });
     }

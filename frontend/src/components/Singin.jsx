@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Singin() {
     const [credential, setCredential] = useState({name : "",usertype : "",email : "",password: ""});
+    const navigateTo = useNavigate();
     const onchange = (e)=>{
         setCredential({...credential,[e.target.name]: e.target.value})
       }
@@ -21,11 +22,26 @@ export default function Singin() {
             })
               .then(function (response) {
                 localStorage.setItem('token',response.data.token)
-                navigateTo('/')
               })
               .catch((err)=>{
                 console.log(err.response.data);
             })
+            await axios({
+              method: 'post',
+              url: 'http://localhost:3000/api/user/',
+              headers: {
+                'Content-Type': 'application/json',
+                'auth-token': localStorage.getItem('token')
+                    },
+            })
+              .then(function (response) {
+                localStorage.setItem('user',JSON.stringify(response.data.user))
+                navigateTo('/')
+              })
+              .catch((err)=>{
+                  console.log(err.response.data);
+              })
+
       }
   return (
     <div className="container">

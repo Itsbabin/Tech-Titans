@@ -19,7 +19,6 @@ route.get('/getuserdata/client',fetchuser, async (req ,res) => {
 // to show lawyers thier cases
 route.get('/getuserdata/lawyer',fetchuser, async (req ,res) => {
     try {       
-
         const datas = await DataUser1.find({lawyer: req.user})
         res.status(200).json(datas);
      }
@@ -47,9 +46,8 @@ route.post('/creatuserdata',fetchuser, [
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const name = await User.find({email : req.user});
     await DataUser1.create({
-        name: name[0].name,
+        name:req.body.name,
         email: req.user,
         type: req.body.type,
         lawyer: req.body.lawyer,

@@ -1,7 +1,15 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 
 export default function Navbar() {
+  const token = localStorage.getItem('token')
+  const navigateTo = useNavigate();
+
+ const removeToken = ()=>{
+     alert("log out ?")
+     localStorage.clear('token');
+     navigateTo('/login')
+ }
+
   return (
     <div className="navbar">
       <Link className="link" to="/">
@@ -15,9 +23,6 @@ export default function Navbar() {
             viewBox="0 0 1280.000000 1225.000000"
             preserveAspectRatio="xMidYMid meet"
           >
-            <metadata>
-              Created by potrace 1.15, written by Peter Selinger 2001-2017
-            </metadata>
             <g
               transform="translate(0.000000,1225.000000) scale(0.100000,-0.100000)"
               fill="#ffffff"
@@ -62,13 +67,16 @@ l-6 -193 671 0 671 0 0 53 c1 105 -151 5493 -156 5525 l-5 32 -519 0 -520 0 0
             </g>
           </svg>
         </div>{" "}
-      </Link>
+        </Link>
+        {token?<button onClick={removeToken}>log out</button>:<div>
       <Link className="link" to="/singin">
         <div className="singin">Singin</div>{" "}
       </Link>
       <Link className="link" to="/login">
         <div className="singin">Login</div>{" "}
       </Link>
+      </div>
+}
     </div>
   );
 }

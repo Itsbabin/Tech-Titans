@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
     const [credential, setCredential] = useState({email : "",password: ""});
-    
     const navigateTo = useNavigate();
     
     const onchange = (e)=>{
@@ -24,6 +23,20 @@ export default function Login() {
             .then(function (response) {
               localStorage.setItem('token',response.data.token)
               alert("login success fully")
+            })
+            .catch((err)=>{
+                console.log(err.response.data);
+            })
+    await axios({
+            method: 'post',
+            url: 'http://localhost:3000/api/user/',
+            headers: {
+              'Content-Type': 'application/json',
+              'auth-token': localStorage.getItem('token')
+                  },
+          })
+            .then(function (response) {
+              localStorage.setItem('user',JSON.stringify(response.data.user))
               navigateTo('/')
             })
             .catch((err)=>{
