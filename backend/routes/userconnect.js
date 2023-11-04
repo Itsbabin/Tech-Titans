@@ -96,8 +96,8 @@ route.post('/login', [
 route.post('/', fetchuser, async (req, res) => {
 
     try {
-        const useremail = req.email;
-        const user = await User.findOne({ useremail });
+        const email = req.user;
+        const user = await User.findOne({ email });
         res.status(200).json({ user });
     } catch (error) {
         res.status(400).json({ errors: "some error occored" });

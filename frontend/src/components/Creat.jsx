@@ -51,7 +51,7 @@ export default function Creat() {
         </div>
         <div className="form-group">
             <label htmlFor="lawyer">Lawyer</label>
-            <input type="text" id="name" name="lawyer" minLength={3}  onChange={onchange} required/>
+            <input type="email" id="name" name="lawyer" minLength={3}  onChange={onchange} required/>
         </div>
         <div className="form-group">
             <label htmlFor="address">Address</label>
